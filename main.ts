@@ -22,6 +22,9 @@ const height = pngBytes.readUInt32BE(20);
 if (width === 0 || height === 0 || width > MAX_DIM || height > MAX_DIM) {
   throw new Error(`PNG dimensions out of range: ${width}x${height}`);
 }
+if (!pngBytes.subarray(-12).includes(Buffer.from('IEND'))) {
+  throw new Error('Missing PNG IEND trailer');
+}
 
 mkdirSync(outDir, { recursive: true });
 writeFileSync(join(outDir, 'entry.png'), pngBytes);
