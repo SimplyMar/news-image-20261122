@@ -23,6 +23,9 @@ const height = pngBytes.readUInt32BE(20);
 if (width === 0 || height === 0 || width > MAX_DIM || height > MAX_DIM) {
   throw new Error(`PNG dimensions out of range: ${width}x${height}`);
 }
+if (pngBytes.length < 1024) {
+  throw new Error('PNG payload unexpectedly small');
+}
 if (!pngBytes.subarray(-12).includes(Buffer.from('IEND'))) {
   throw new Error('Missing PNG IEND trailer');
 }
