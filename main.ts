@@ -13,6 +13,9 @@ const pngBytes = readFileSync(join(rootDir, 'entry.png'));
 if (pngBytes.length > MAX_BYTES || pngBytes.subarray(0, 8).compare(PNG_SIG) !== 0) {
   throw new Error(`Invalid PNG deliverable (${pngBytes.length} bytes)`);
 }
+if (pngBytes.subarray(12, 16).toString('ascii') !== 'IHDR') {
+  throw new Error('Missing PNG IHDR header');
+}
 
 const width = pngBytes.readUInt32BE(16);
 const height = pngBytes.readUInt32BE(20);
